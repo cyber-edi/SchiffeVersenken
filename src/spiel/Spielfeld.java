@@ -19,6 +19,10 @@ public class Spielfeld
 	boolean kompass, besetzt;
 	//X, Y Koordinaten
 	int x, y;
+	//int zerstoerteSchiffe1 = 0;
+	//int zerstoerteSchiffe2 = 0;
+	boolean flotteZerstoert1 = false;
+	boolean flotteZerstoert2 = false;
 	
 	Random zufall = new Random ();
 	BufferedReader br = new BufferedReader (new InputStreamReader (System.in));
@@ -37,20 +41,6 @@ public class Spielfeld
 			System.out.println();
 		}
 		System.out.println();
-	}
-	public void checkSchiff(Schiff [] schiff)
-	{
-		int schaden = 0;
-		for (int i = 0; i < schiff.length; i++)
-		{			
-			if (schiff[i].getSchaden() == true)
-				schaden++;
-		}
-		if (schaden == schiff.length)
-		{
-			for (int i = 0; i < schiff.length; i++)
-				schiff[i].setZerstoert(true);
-		}
 	}
 	public void setWasser ()
 	{
@@ -76,7 +66,7 @@ public class Spielfeld
 		}
 		System.out.println();
 	}
-	public void setSchiffZerstoert (Schiff [] schiff)
+	public void checkSchiffSp1 (Schiff [] schiff)
 	{
 		int schaden = 0;
 		for (int i = 0; i < schiff.length; i++)
@@ -91,9 +81,88 @@ public class Spielfeld
 				schiff[i].setZerstoert(true);
 			}
 			System.out.println(schiff[0].getTyp() + " ist zerstört!");
+			//zerstoerteSchiffe++;
+			//zerstoerteSchiffe1++;
 		}
 	}
+	public void checkSchiffSp2 (Schiff [] schiff)
+	{
+		int schaden = 0;
+		for (int i = 0; i < schiff.length; i++)
+		{
+			if (schiff[i].getSchaden() == true)
+				schaden++;
+		}
+		if (schiff.length == schaden)
+		{
+			for (int i = 0; i < schiff.length; i++)
+			{
+				schiff[i].setZerstoert(true);
+				
+			}
+			System.out.println(schiff[0].getTyp() + " ist zerstört!");
+			//zerstoerteSchiffe++;
+			//zerstoerteSchiffe2++;
+		}
+		
+	}
 	
+	public boolean checkFlotteSp2 (Flotte2 flotte)
+	{		
+		checkSchiffSp2(flotte.kreuzer1);
+		checkSchiffSp2(flotte.kreuzer2);
+		checkSchiffSp2(flotte.schlachtSchiff);
+		checkSchiffSp2(flotte.uBoot1);
+		checkSchiffSp2(flotte.uBoot2);
+		checkSchiffSp2(flotte.uBoot3);
+		checkSchiffSp2(flotte.uBoot4);
+		checkSchiffSp2(flotte.zerstoerer1);
+		checkSchiffSp2(flotte.zerstoerer2);
+		checkSchiffSp2(flotte.zerstoerer3);
+		
+		if (flotte.kreuzer1[0].getZerstoert() == true &&
+				flotte.kreuzer2[0].getZerstoert() == true &&
+				flotte.schlachtSchiff[0].getZerstoert() == true &&
+				flotte.uBoot1[0].getZerstoert() == true &&
+				flotte.uBoot2[0].getZerstoert() == true &&
+				flotte.uBoot3[0].getZerstoert() == true &&
+				flotte.uBoot4[0].getZerstoert() == true &&
+				flotte.zerstoerer1[0].getZerstoert() == true &&
+				flotte.zerstoerer2[0].getZerstoert() == true &&
+				flotte.zerstoerer3[0].getZerstoert() == true)
+		{
+			flotteZerstoert2 = true;
+		}
+		return flotteZerstoert2;
+	}
+	public boolean checkFlotteSp1 (Flotte flotte)
+	{		
+		checkSchiffSp1(flotte.kreuzer1);
+		checkSchiffSp1(flotte.kreuzer2);
+		checkSchiffSp1(flotte.schlachtSchiff);
+		checkSchiffSp1(flotte.uBoot1);
+		checkSchiffSp1(flotte.uBoot2);
+		checkSchiffSp1(flotte.uBoot3);
+		checkSchiffSp1(flotte.uBoot4);
+		checkSchiffSp1(flotte.zerstoerer1);
+		checkSchiffSp1(flotte.zerstoerer2);
+		checkSchiffSp1(flotte.zerstoerer3);
+		
+		if (flotte.kreuzer1[0].getZerstoert() == true &&
+				flotte.kreuzer2[0].getZerstoert() == true &&
+				flotte.schlachtSchiff[0].getZerstoert() == true &&
+				flotte.uBoot1[0].getZerstoert() == true &&
+				flotte.uBoot2[0].getZerstoert() == true &&
+				flotte.uBoot3[0].getZerstoert() == true &&
+				flotte.uBoot4[0].getZerstoert() == true &&
+				flotte.zerstoerer1[0].getZerstoert() == true &&
+				flotte.zerstoerer2[0].getZerstoert() == true &&
+				flotte.zerstoerer3[0].getZerstoert() == true)
+		{
+			flotteZerstoert1 = true;
+		}
+		return flotteZerstoert1;
+	}
 	public void checkPosition (int x, int y)
 	{
 		if (spielfeld[x][y].getClass().equals(Wasser.class))
@@ -108,6 +177,7 @@ public class Spielfeld
 			spielfeld[x][y].setSchaden(true);
 			System.out.println("Volltreffer!");
 			koordinaten[x][y].setGetroffen(true);
+			//spielfeld[x][y].getClass().isInstance(Schiff.class)
 		}
 	}
 	public boolean checkBesetzt (int x, int y, int l, boolean kompass)
@@ -116,22 +186,26 @@ public class Spielfeld
 		{
 			for (int i = 0; i < l; i++)
 			{
-				if (spielfeld[x][y + i].getClass().equals(Schiff.class))
-					besetzt = true;
-				
-				else
+				if (spielfeld[x][y + i].getClass().equals(Wasser.class))
 					besetzt = false;
-			}
-			
+				else
+				{
+					besetzt = true;
+					break;
+				}
+			}			
 		}
 		else
 		{
 			for (int i = 0; i < l; i++)
 			{
-				if (spielfeld[x + i][y].getClass().equals(Schiff.class))
-					besetzt = true;
-				else 
+				if (spielfeld[x + i][y].getClass().equals(Wasser.class))
 					besetzt = false;
+				else
+				{
+					besetzt = true;
+					break;
+				}
 			}
 		}
 		return besetzt;
@@ -142,14 +216,19 @@ public class Spielfeld
 		{
 			System.out.println("\nEingabe Position " + typ + "\n");
 			checkKompass ();
-			System.out.print("Reihe: ");
+			System.out.print("\nReihe: ");
 			x = eingabe.nextInt();
 			System.out.print("Spalte: ");
 			y = eingabe.nextInt();
 			checkBesetzt(x, y, schiff.length, kompass);
-			if (besetzt == false)
-			{
-				if (kompass == false)
+			if (besetzt == true)
+				System.out.println("Platz schon besetzt!");
+		}
+		while (besetzt == true);
+			
+		if (besetzt == false)
+		{
+			if (kompass == false)
 				{
 					for (int i = 0; i < schiff.length; i++)
 					{
@@ -165,22 +244,14 @@ public class Spielfeld
 						spielfeld[x + i][y] = schiff[i];
 					}
 				}
-			}
-			else
-			{
-				besetzt = true;
-				System.out.println("Platz schon besetzt!");
-			}
-		}
-		while (besetzt == true);
-		
-		System.out.println("Schiff " + typ + " wurde platziert!");
+			System.out.println("Schiff " + typ + " wurde platziert!");
+			}		
 	}
 	public boolean checkKompass ()
 	{
 		String horizontal = "h";
 		String input;
-		System.out.print("Kompass\nHorizontal = h\nVertikal = v\nEingabe: ");
+		System.out.print("Kompass\tHorizontal = h\tVertikal = v\nEingabe: ");
 		try
 		{
 			input = br.readLine();
@@ -212,9 +283,7 @@ public class Spielfeld
 						schiff[i] = new Schiff (typ, l);
 						spielfeld[x][y + i] = schiff[i];
 					}
-				}
-				else
-					besetzt = true;
+				}				
 			}
 			else
 			{
@@ -229,13 +298,24 @@ public class Spielfeld
 						spielfeld[x + i][y] = schiff[i];
 					}
 				}
-				else
-					besetzt = true;
 			}
 		}
 		while (besetzt == true);
 	}
 	public void setRandomSpielfeld (Flotte flotte)
+	{
+		setRandomSchiff(flotte.schlachtSchiff, "Schlachtschiff", flotte.schlachtSchiff.length);
+		setRandomSchiff(flotte.kreuzer1, "Kreuzer I", flotte.kreuzer1.length);
+		setRandomSchiff(flotte.kreuzer2, "Kreuzer II", flotte.kreuzer2.length);
+		setRandomSchiff(flotte.zerstoerer1, "Zerstörer I", flotte.zerstoerer1.length);
+		setRandomSchiff(flotte.zerstoerer2, "Zerstörer II", flotte.zerstoerer2.length);
+		setRandomSchiff(flotte.zerstoerer3, "Zerstörer III", flotte.zerstoerer3.length);
+		setRandomSchiff(flotte.uBoot1, "U-Boot I", flotte.uBoot1.length);
+		setRandomSchiff(flotte.uBoot2, "U-Boot II", flotte.uBoot2.length);
+		setRandomSchiff(flotte.uBoot3, "U-Boot III", flotte.uBoot3.length);
+		setRandomSchiff(flotte.uBoot4, "U-Boot IV", flotte.uBoot4.length);
+	}
+	public void setRandomSpielfeld2 (Flotte2 flotte)
 	{
 		setRandomSchiff(flotte.schlachtSchiff, "Schlachtschiff", flotte.schlachtSchiff.length);
 		setRandomSchiff(flotte.kreuzer1, "Kreuzer I", flotte.kreuzer1.length);
