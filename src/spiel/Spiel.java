@@ -10,8 +10,8 @@ public class Spiel
 		Random zufall = new Random ();
 		Scanner eingabe = new Scanner (System.in);
 		int x, y;
-		int versuche1 = 0;
-		int versuche2 = 0;
+		int versuche1 = 1;
+		int versuche2 = 1;
 		Flotte flotteSpieler1 = new Flotte ();
 		Flotte2 flotteSpieler2 = new Flotte2 ();
 		Spielfeld spieler1 = new Spielfeld();
@@ -27,10 +27,17 @@ public class Spiel
 			System.out.println(versuche1 + ". Versuch ");
 			spieler2.displayGegner();
 			System.out.println("Spieler 1. schießt...");
-			System.out.print("Reihe: ");
-			x = zufall.nextInt(10);
-			System.out.print("Spalte: ");
-			y = zufall.nextInt(10);
+			
+			do
+			{
+				System.out.print("Reihe: ");
+				x = zufall.nextInt(10);
+				System.out.print("Spalte: ");
+				y = zufall.nextInt(10);				
+			}
+			while (spieler2.koordinaten[x][y].isAnvisiert() ==true ||
+					spieler2.koordinaten[x][y].isGetroffen() == true);
+			
 			spieler2.checkPosition(x, y);
 			spieler2.checkFlotteSp2(flotteSpieler2);
 			if (spieler2.flotteZerstoert2 == true)
@@ -38,12 +45,20 @@ public class Spiel
 			//System.out.println(spieler2.zerstoerteSchiffe2);
 			versuche1++;
 						
+			
 			System.out.println("----------------------------");
 			System.out.print("Spieler 2. schießt...");
-			x = zufall.nextInt(10);
-			y = zufall.nextInt(10);
-			System.out.println("in der Reihe: " + x + ". Spalte: " + y);
+			do
+			{
+				x = zufall.nextInt(10);
+				y = zufall.nextInt(10);				
+			}
+			while (spieler1.koordinaten[x][y].isAnvisiert() == true ||
+					spieler1.koordinaten[x][y].isGetroffen() == true);
+			
 			spieler1.checkPosition(x, y);
+			System.out.println("in der Reihe: " + x + ". Spalte: " + y);
+				
 			spieler1.checkFlotteSp1(flotteSpieler1);
 			if (spieler1.flotteZerstoert1 == true)
 				break;
@@ -52,9 +67,9 @@ public class Spiel
 			versuche2++;
 		}
 		if (spieler1.flotteZerstoert1 == true)
-			System.out.println("Leider verloren!");
+			System.out.println("Leider verloren!\n In " + versuche2 + " Versuchen.");
 		if (spieler2.flotteZerstoert2 == true)
-			System.out.println("Gewonnen!!");
+			System.out.println("Gewonnen!!!\n In " + versuche1 + " Versuchen.");
 		
 	}
 	

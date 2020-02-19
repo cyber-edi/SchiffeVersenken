@@ -24,4 +24,10 @@ public class Feld
 	{
 		return schiff;
 	}
+	public boolean isAnvisiert() {
+		return anvisiert;
+	}
+	public boolean isSchaden() {
+		return schaden;
+	}
 }	
