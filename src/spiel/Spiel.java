@@ -29,11 +29,19 @@ public class Spiel
 			System.out.println("Spieler 1. schießt...");
 			
 			do
-			{
-				System.out.print("Reihe: ");
-				x = zufall.nextInt(10);
-				System.out.print("Spalte: ");
-				y = zufall.nextInt(10);				
+			{				
+				do
+				{
+					System.out.print("Reihe: ");
+					x = eingabe.nextInt(10);
+				}
+				while (x < 0 || x > 9);
+				do
+				{
+					System.out.print("Spalte: ");
+					y = eingabe.nextInt(10);
+				}
+				while (y < 0 || y > 9);
 			}
 			while (spieler2.koordinaten[x][y].isAnvisiert() ==true ||
 					spieler2.koordinaten[x][y].isGetroffen() == true);
